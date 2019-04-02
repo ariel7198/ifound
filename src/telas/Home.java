@@ -53,11 +53,12 @@ public class Home extends javax.swing.JFrame {
 
     public void atualizaInterface() {
         //-------------montagem dos objetos encontrados ------------
-
+        System.out.println("Atualizando interface");
         classes.Publicacao p1;
         BufferedImage img;
         Image newimg;
         ImageIcon icone;
+        boolean buscar = true;
         try {
             Cliente.out.writeObject("listaEncontrados");
             String result = (String) Cliente.in.readObject();
@@ -66,9 +67,10 @@ public class Home extends javax.swing.JFrame {
                 listaEncontrados = (LinkedList) Cliente.in.readObject();
                 int quantidade_publicacoes_encontrados = listaEncontrados.size();
                 int qt = 0;
-                System.out.println("tamanho da lista: " + listaEncontrados.size());
-                if (listaPerdidos != null) {
+                System.out.println("tamanho da lista de encontrados: " + listaEncontrados.size());
+                if (listaPerdidos.size() > 0) {
                     try {
+                        System.out.println("Criando primeiro card de encontrado");
                         p1 = listaEncontrados.get(0);
                         jLabelTituloEncontrado1.setText(p1.getTitulo());
                         jLabelDescricaoEncontrado1.setText(p1.getDescricao());
@@ -91,29 +93,17 @@ public class Home extends javax.swing.JFrame {
                             icone = new ImageIcon(newimg);
                             jLabelFotoEncontrado1.setIcon(icone);
                         } catch (IOException ex) {
-
+                            System.out.println("Erro buscando imagem: " + ex);
                         }
 
                         qt++;
 
                     } catch (IndexOutOfBoundsException ex) {
                         System.out.println("Fim da lista no primeiro item encontrado. Erro: " + ex);
-                        jLabelFotoEncontrado1.setVisible(false);
-                        jButtonAceitarEncontrado1.setVisible(false);
-                        jButtonRejeitarEncontrado1.setVisible(false);
-                        jLabelTituloEncontrado1.setVisible(false);
-                        jLabelDescricaoEncontrado1.setText("Nenhum item pendente");
-                        jLabelDescricaoEncontrado1.setFont(new java.awt.Font("Arial", 2, 17));
-                        jLabelDescricaoEncontrado1.setForeground(new java.awt.Color(102, 102, 102));
-                        //lasses.Local = p1.getLocal();
-                        jLabelLocalEncontrado1.setVisible(false);
-                        jLabelAutorEncontrado1.setVisible(false);
-                        jPanelEncontrado2.setVisible(false);
-                        jPanelEncontrado3.setVisible(false);
-                        jPanelEncontrado4.setVisible(false);
-
+                        disableComponents(1);
                     }
                     try {
+                        System.out.println("Criando segundo card de encontrado");
                         classes.Publicacao p2 = listaEncontrados.get(1);
                         jLabelTituloEncontrado2.setText(p2.getTitulo());
                         jLabelDescricaoEncontrado2.setText(p2.getDescricao());
@@ -136,17 +126,16 @@ public class Home extends javax.swing.JFrame {
                             newimg = img.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
                             icone = new ImageIcon(newimg);
                             jLabelFotoEncontrado2.setIcon(icone);
-                        } catch (IOException ex ){
-                            
+                        } catch (IOException ex) {
+
                         }
                         qt++;
                     } catch (IndexOutOfBoundsException ex) {
                         System.out.println("Fim da lista no elemento 1 encontrado.");
-                        jPanelEncontrado2.setVisible(false);
-                        jPanelEncontrado3.setVisible(false);
-                        jPanelEncontrado4.setVisible(false);
+                        disableComponents(2);
                     }
                     try {
+                        System.out.println("Criando terceiro card de encontrado");
                         classes.Publicacao p3 = listaEncontrados.get(2);
                         jLabelTituloEncontrado3.setText(p3.getTitulo());
                         jLabelDescricaoEncontrado3.setText(p3.getDescricao());
@@ -171,11 +160,14 @@ public class Home extends javax.swing.JFrame {
 
                     } catch (IndexOutOfBoundsException ex) {
                         System.out.println("Fim da lista no elemento 2 encontrado");
-                        jPanelEncontrado3.setVisible(false);
-                        jPanelEncontrado4.setVisible(false);
+                        disableComponents(3);
 
+                    } catch (IOException ex) {
+                        System.out.println("Erro de leitura: " + ex);
                     }
+
                     try {
+                        System.out.println("Criando quarto card de encontrado");
                         classes.Publicacao p4 = listaEncontrados.get(3);
                         jLabelTituloEncontrado4.setText(p4.getTitulo());
                         jLabelDescricaoEncontrado4.setText(p4.getDescricao());
@@ -199,10 +191,14 @@ public class Home extends javax.swing.JFrame {
                         qt++;
                     } catch (IndexOutOfBoundsException ex) {
                         System.out.println("Fim da lista no elemento 3 encontrado");
-                        jPanelEncontrado4.setVisible(false);
+                        disableComponents(4);
                     }
                     jLQuantidadeEncontrados.setText("Exibindo " + qt + " de " + listaEncontrados.size() + " itens");
 
+                } else {
+                    for (int x = 1; x <= 4; x++) { //retira todos os componentes da tela caso a lista esteja vazia
+                        disableComponents(x);
+                    }
                 }
 
             }
@@ -225,8 +221,9 @@ public class Home extends javax.swing.JFrame {
                 int qt2 = 0;
 
                 System.out.println("tamanho da lista: " + listaPerdidos.size());
-                if (listaPerdidos != null) {
+                if (listaPerdidos.size() > 0) { //testa se o tamanho da lista é maior que 0, antes testava se era null
                     try {
+                        System.out.println("Criando primeiro card de perdido");
                         classes.Publicacao pp1 = listaPerdidos.get(0);
                         jLabelTituloPerdido1.setText(pp1.getTitulo());
                         jLabelDescricaoPerdido1.setText(pp1.getDescricao());
@@ -251,21 +248,10 @@ public class Home extends javax.swing.JFrame {
 
                     } catch (IndexOutOfBoundsException ex) {
                         System.out.println("Fim da lista no primeiro item perdido. Erro: " + ex);
-                        jLabelFotoPerdido1.setVisible(false);
-                        jButtonAceitarPerdido1.setVisible(false);
-                        jButtonRejeitarPerdido1.setVisible(false);
-                        jLabelTituloPerdido1.setVisible(false);
-                        jLabelDescricaoPerdido1.setText("Nenhum item pendente");
-                        jLabelDescricaoPerdido1.setFont(new java.awt.Font("Arial", 2, 17)); // NOI18N
-                        jLabelDescricaoPerdido1.setForeground(new java.awt.Color(102, 102, 102));
-                        //lasses.Local = p1.getLocal();
-                        jLabelLocalPerdido1.setVisible(false);
-                        jLabelAutorPerdido1.setVisible(false);
-                        jPanelPerdido2.setVisible(false);
-                        jPanelPerdido3.setVisible(false);
-                        jPanelPerdido4.setVisible(false);
+                        disableComponents(5);
                     }
                     try {
+                        System.out.println("Criando segundo card de perdido");
                         classes.Publicacao pp2 = listaPerdidos.get(1);
                         jLabelTituloPerdido2.setText(pp2.getTitulo());
                         jLabelDescricaoPerdido2.setText(pp2.getDescricao());
@@ -289,11 +275,11 @@ public class Home extends javax.swing.JFrame {
                         qt2++;
                     } catch (IndexOutOfBoundsException ex) {
                         System.out.println("Fim da lista no elemento 1. perdido");
-                        jPanelPerdido2.setVisible(false);
-                        jPanelPerdido3.setVisible(false);
-                        jPanelPerdido4.setVisible(false);
+                        disableComponents(6);
                     }
                     try {
+
+                        System.out.println("Criando terceiro card de perdido");
                         classes.Publicacao pp3 = listaPerdidos.get(2);
                         jLabelTituloPerdido3.setText(pp3.getTitulo());
                         jLabelDescricaoPerdido3.setText(pp3.getDescricao());
@@ -318,10 +304,10 @@ public class Home extends javax.swing.JFrame {
 
                     } catch (IndexOutOfBoundsException ex) {
                         System.out.println("Fim da lista no elemento 2 perdido");
-                        jPanelPerdido3.setVisible(false);
-                        jPanelPerdido4.setVisible(false);
+                        disableComponents(7);
                     }
                     try {
+                        System.out.println("Criando quarto card de perdido");
                         classes.Publicacao pp4 = listaPerdidos.get(3);
                         jLabelTituloPerdido4.setText(pp4.getTitulo());
                         jLabelDescricaoPerdido4.setText(pp4.getDescricao());
@@ -345,15 +331,14 @@ public class Home extends javax.swing.JFrame {
                         qt2++;
                     } catch (IndexOutOfBoundsException ex) {
                         System.out.println("Fim da lista no elemento 3 perdido");
-                        jPanelPerdido4.setVisible(false);
+                        disableComponents(8);
 
                     }
 
                 } else {
-                    jPanelPerdido1.setVisible(false);
-                    jPanelPerdido2.setVisible(false);
-                    jPanelPerdido3.setVisible(false);
-                    jPanelPerdido4.setVisible(false);
+                    for (int x = 1; x <= 4; x++) { //retira todos os componentes da tela caso a lista esteja vazia
+                        disableComponents(x);
+                    }
                 }
                 jLPerdidosQuantidade.setText("Exibindo " + qt2 + " de " + listaPerdidos.size() + " itens");
 
@@ -428,6 +413,8 @@ public class Home extends javax.swing.JFrame {
         jLADMNome = new javax.swing.JLabel();
         JLLogoutIcon = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
         jPanelContent = new javax.swing.JPanel();
         jPanelMenu = new javax.swing.JPanel();
         jButtonCadastroUsuario = new javax.swing.JPanel();
@@ -573,6 +560,17 @@ public class Home extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Sair");
 
+        jLabel18.setText("jLabel18");
+        jLabel18.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel18MouseClicked(evt);
+            }
+        });
+
+        jLabel19.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel19.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel19.setText("Atualizar");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -581,19 +579,30 @@ public class Home extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addComponent(jLLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(bemVindo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(JLLogoutIcon)
-                    .addComponent(jLabel1)
-                    .addComponent(jLADMNome, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(40, 40, 40))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(bemVindo)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(JLLogoutIcon)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLADMNome, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(11, 11, 11)
+                                .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(40, 40, 40))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel19)
+                        .addGap(71, 71, 71))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(25, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(bemVindo)
@@ -601,12 +610,20 @@ public class Home extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(JLLogoutIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel1))
-                    .addComponent(jLLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(34, 34, 34))
+                        .addComponent(jLabel1)
+                        .addGap(31, 31, 31)
+                        .addComponent(jLabel19)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
 
         jPanelContent.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelContent.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jPanelContentFocusGained(evt);
+            }
+        });
 
         jPanelMenu.setBackground(new java.awt.Color(245, 245, 245));
 
@@ -1760,6 +1777,14 @@ public class Home extends javax.swing.JFrame {
         rejeitaPublicacao(id);
     }//GEN-LAST:event_jButtonRejeitarEncontrado4MouseClicked
 
+    private void jLabel18MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel18MouseClicked
+        atualizaInterface();
+    }//GEN-LAST:event_jLabel18MouseClicked
+
+    private void jPanelContentFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jPanelContentFocusGained
+        atualizaInterface();
+    }//GEN-LAST:event_jPanelContentFocusGained
+
     /**
      * @param args the command line arguments
      */
@@ -1833,6 +1858,8 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1918,4 +1945,64 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
     // End of variables declaration//GEN-END:variables
+
+    private void disableComponents(int i) {
+        System.out.println ("Entrou na função de disableComponents com parâmetro "+i);
+        switch (i) {
+            case 1:
+                jLabelFotoEncontrado1.setVisible(false);
+                jButtonAceitarEncontrado1.setVisible(false);
+                jButtonRejeitarEncontrado1.setVisible(false);
+                jLabelTituloEncontrado1.setVisible(false);
+                jLabelDescricaoEncontrado1.setText("Nenhum item pendente");
+                jLabelDescricaoEncontrado1.setFont(new java.awt.Font("Arial", 2, 17));
+                jLabelDescricaoEncontrado1.setForeground(new java.awt.Color(102, 102, 102));
+                //lasses.Local = p1.getLocal();
+                jLabelLocalEncontrado1.setVisible(false);
+                jLabelAutorEncontrado1.setVisible(false);
+                jPanelEncontrado2.setVisible(false);
+                jPanelEncontrado3.setVisible(false);
+                jPanelEncontrado4.setVisible(false);
+                break;
+            case 2:
+                jPanelEncontrado2.setVisible(false);
+                jPanelEncontrado3.setVisible(false);
+                jPanelEncontrado4.setVisible(false);
+                break;
+            case 3:
+                jPanelEncontrado3.setVisible(false);
+                jPanelEncontrado4.setVisible(false);
+                break;
+            case 4:
+                jPanelEncontrado4.setVisible(false);
+                break;
+            case 5:
+                jLabelFotoPerdido1.setVisible(false);
+                jButtonAceitarPerdido1.setVisible(false);
+                jButtonRejeitarPerdido1.setVisible(false);
+                jLabelTituloPerdido1.setVisible(false);
+                jLabelDescricaoPerdido1.setText("Nenhum item pendente");
+                jLabelDescricaoPerdido1.setFont(new java.awt.Font("Arial", 2, 17)); // NOI18N
+                jLabelDescricaoPerdido1.setForeground(new java.awt.Color(102, 102, 102));
+                //lasses.Local = p1.getLocal();
+                jLabelLocalPerdido1.setVisible(false);
+                jLabelAutorPerdido1.setVisible(false);
+                jPanelPerdido2.setVisible(false);
+                jPanelPerdido3.setVisible(false);
+                jPanelPerdido4.setVisible(false);
+                break;
+            case 6:
+                jPanelPerdido2.setVisible(false);
+                jPanelPerdido3.setVisible(false);
+                jPanelPerdido4.setVisible(false);
+                break;
+            case 7:
+                jPanelPerdido3.setVisible(false);
+                jPanelPerdido4.setVisible(false);
+                break;
+            case 8:
+                jPanelPerdido4.setVisible(false);
+                break;
+        }
+    }
 }
